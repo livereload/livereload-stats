@@ -37,7 +37,7 @@ logUnknownAgent = (agent) ->
 
 guessOperatingSystem = (agent) ->
   switch
-    when !agent                      then 'unknown'
+    when !agent                      then 'none'
     when agent.match(/Darwin\/12\./) then 'mac_10_8'
     when agent.match(/Darwin\/11\./) then 'mac_10_7'
     when agent.match(/Darwin\/10\./) then 'mac_10_6'
@@ -50,7 +50,7 @@ exports.computeEvents = (entry) ->
   if (entry.platform is 'windows') and (entry.iversion.startsWith '0.')
     events.push "v:platform:windows"
     events.push "v:os:win_any"
-  else
+  else if entry.agent isnt '-'
     events.push "v:platform:mac"
     events.push "v:os:" + guessOperatingSystem(entry.agent)
 
