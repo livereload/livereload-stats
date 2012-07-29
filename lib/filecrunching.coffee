@@ -84,7 +84,7 @@ exports.run = (options, sourceGroup, destinationGroup, func) ->
       outputData = func.apply(null, args)
       console.timeEnd " -> computation"
 
-      unless outputData instanceof Hierarchy
+      if destinationGroup.levels > 0 and !(outputData instanceof Hierarchy)
         throw new Error("Processing function returned something which is not a Hierarchy: #{typeof outputData} #{JSON.stringify(outputData)}")
 
       if func.temporalOutput

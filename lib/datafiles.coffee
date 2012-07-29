@@ -31,6 +31,22 @@ class DataFileGroup
 
   subpath: (subpath) -> Path.join(@path, subpath)
 
+  parse: (data) -> JSON.parse(data)
+
+
+class ApacheDataFileGroup extends DataFileGroup
+
+  constructor: (subdir) ->
+    super(subdir, 'day', 0, '')
+    @regexp = /^access_log\.\d{8}$/
+
+  idToFileName: (id)   -> "access_log.#{id.replace(/-/g, '')}"
+
+  fileNameToId: (name) -> name.replace('access_log.', '').replace(/^(\d\d\d\d)(\d\d)(\d\d)/, (_, y, m, d) -> "#{y}-#{m}-#{d}")
+
+  parse: (data) -> data.split("\n")
+
+
 
 class DataFile
   constructor: (@group, @path, @id) ->
@@ -39,7 +55,7 @@ class DataFile
   exists:    -> Path.existsSync(@path)
 
   readSync:  ->
-    result = JSON.parse(fs.readFileSync(@path))
+    result = @group.parse(fs.readFileSync(@path, 'utf8'))
     if @group.levels > 0
       Hierarchy(result, @group.levels)
     else
@@ -58,7 +74,9 @@ class DataFile
 
 
 exports.DataFileGroups = DataFileGroups =
+  apache:  new ApacheDataFileGroup('apache')
   raw:     new DataFileGroup('raw',     'day',    0,  '')
+  rawxx:   new DataFileGroup('rawxx',   'day',    0,  '')
   html:    new DataFileGroup('html',    'none',   0,  '')
 
 CATEGORIES = [
