@@ -20,7 +20,7 @@ class DataFileGroup
 
   allFiles: ->
     @mkdir()
-    for fileName in fs.readdirSync(@path) when fileName.match(@regexp)
+    for fileName in fs.readdirSync(@path).sort() when fileName.match(@regexp)
       new DataFile(this, Path.join(@path, fileName), @fileNameToId(fileName))
 
   file: (id) ->
