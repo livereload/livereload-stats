@@ -20,10 +20,10 @@ logUnknownAgent = (agent) ->
       continue if line.length is 0
       LOGGED_UNKNOWN_AGENTS[line] = yes
 
+  console.log "Unknown user agent: #{agent}"
+
   unless LOGGED_UNKNOWN_AGENTS[agent]
     LOGGED_UNKNOWN_AGENTS[agent] = yes
-
-    console.log "Unknown user agent: #{agent}"
 
     data = require('fs').readFileSync(UNKNOWN_AGENTS_FILE, 'utf8')
     data = "#{data}#{agent}\n"
