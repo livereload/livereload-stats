@@ -1,7 +1,7 @@
 #!/bin/bash
 mkdir -p data/apache-bz2
 mkdir -p data/apache
-echo RSYNC
+echo "RSYNC data/apache-bz2"
 rsync -azv 'andreyvit_livereload@ssh.phx.nearlyfreespeech.net:/home/logs/access_log.*.bz2' data/apache-bz2/
 cd data/apache
 for i in ../apache-bz2/*.bz2; do
