@@ -25,7 +25,10 @@ logUnknownAgent = (agent) ->
   unless LOGGED_UNKNOWN_AGENTS[agent]
     LOGGED_UNKNOWN_AGENTS[agent] = yes
 
-    data = require('fs').readFileSync(UNKNOWN_AGENTS_FILE, 'utf8')
+    try
+      data = require('fs').readFileSync(UNKNOWN_AGENTS_FILE, 'utf8')
+    catch e
+      data = ''
     data = "#{data}#{agent}\n"
     require('fs').writeFileSync(UNKNOWN_AGENTS_FILE, data)
 
