@@ -81,6 +81,7 @@ exports.run = (options, sourceGroup, destinationGroup, func) ->
         args.push prevOutputData
 
       console.time " -> computation"
+      console.log " -> computation"
       outputData = func.apply(null, args)
       console.timeEnd " -> computation"
 

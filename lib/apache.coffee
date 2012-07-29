@@ -2,7 +2,8 @@
 
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-REGEXP = /\[(\d+?)\/(\w+?)\/(\d+?):(\d+?):(\d+?):(\d+?) [+?]\d+?\] "GET (.*) HTTP\/1.[01]" \d+? \d+? "([^"]*)" "([^"]*)"$/
+# "[^"\\]*(?:\\.[^"\\]*)*" is a regexp to match a double-quoted string with escapes
+REGEXP = /^((?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*)(?:,\s{0,4}(?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*))*) - - \[(\d+?)\/(\w+?)\/(\d+?):(\d+?):(\d+?):(\d+?) [+?]\d+?\] "(GET|HEAD|POST) (.*) HTTP\/1.[01]" (\d+?) (?:\d+?|-) "[^"\\]*(?:\\.[^"\\]*)*" "[^"\\]*(?:\\.[^"\\]*)*"$/
 
 parseQueryString = (qs) ->
   params = {}
@@ -17,7 +18,7 @@ parseQueryString = (qs) ->
         params.iversion = v
       else if k.startsWith 'stat.'
         params.stats ||= {}
-        params.stats[k.replace(/\./g, '-')] = v
+        params.stats[k.replace(/\./g, '_')] = v
       else
         params[k] = v
   return params
@@ -29,7 +30,7 @@ exports.parseApacheLogLine = (line) ->
   unless match = line.match REGEXP
     return ['invalid']
 
-  [dummy, day, monthName, year, hour, min, sec, url, referrer, ua] = match
+  [dummy, ip, day, monthName, year, hour, min, sec, method, url, code, referrer, ua] = match
 
   try
     url = decodeURIComponent(url)
@@ -37,7 +38,11 @@ exports.parseApacheLogLine = (line) ->
     return ['malformed']
 
   if !url.startsWith('/ping.php?')
-    return ['skipped']
+    return ['skipped_url']
+  if method isnt 'GET'
+    return ['skipped_method']
+  if code isnt '200'
+    return ['skipped_code']
 
   params = parseQueryString url.replace('/ping.php?', '')
 
@@ -47,11 +52,11 @@ exports.parseApacheLogLine = (line) ->
   month += 1
 
   date = sprintf("%04d-%02d-%02d", parseInt(year, 10), month, parseInt(day, 10))
-  time = Math.round(new Date(parseInt(year, 10), month-1, parseInt(day, 10), parseInt(hour, 10), parseInt(min, 10), parseInt(sec, 10)).getTime()/1000)
+  time = Math.round(Date.UTC(parseInt(year, 10), month-1, parseInt(day, 10), parseInt(hour, 10), parseInt(min, 10), parseInt(sec, 10))/1000)
 
   params.date  = date
   params.time  = time
-  params.ip    = '?'
+  params.ip    = ip
   params.agent = ua
 
   return ['ok', params]
