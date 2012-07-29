@@ -27,7 +27,7 @@ class DataFileGroup
 
   mkdir: ->
     unless Path.existsSync(@path)
-      fs.mkdirSync(@path, 0770)
+      fs.mkdirSync(@path, 0o0770)
 
   subpath: (subpath) -> Path.join(@path, subpath)
 
@@ -47,7 +47,7 @@ class DataFile
 
   writeSync: (data) ->
     unless Path.existsSync(Path.dirname(@path))
-      fs.mkdirSync(Path.dirname(@path), 0770)
+      fs.mkdirSync(Path.dirname(@path), 0o0770)
     fs.writeFileSync(@path, JSON.stringify(data, null, 2))
 
   timestamp: ->
