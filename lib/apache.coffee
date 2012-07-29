@@ -3,7 +3,7 @@
 MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 # "[^"\\]*(?:\\.[^"\\]*)*" is a regexp to match a double-quoted string with escapes
-REGEXP = /^((?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*)(?:,\s{0,4}(?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*))*) - - \[(\d+?)\/(\w+?)\/(\d+?):(\d+?):(\d+?):(\d+?) [+?]\d+?\] "(GET|HEAD|POST) (.*) HTTP\/1.[01]" (\d+?) (?:\d+?|-) "[^"\\]*(?:\\.[^"\\]*)*" "[^"\\]*(?:\\.[^"\\]*)*"$/
+REGEXP = /^((?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*)(?:,\s{0,4}(?:unknown|\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:]*))*) - - \[(\d+?)\/(\w+?)\/(\d+?):(\d+?):(\d+?):(\d+?) [+?]\d+?\] "(GET|HEAD|POST) (.*) HTTP\/1.[01]" (\d+?) (?:\d+?|-) "[^"\\]*(?:\\.[^"\\]*)*" ("[^"\\]*(?:\\.[^"\\]*)*)"$/
 
 parseQueryString = (qs) ->
   params = {}
@@ -30,7 +30,7 @@ exports.parseApacheLogLine = (line) ->
   unless match = line.match REGEXP
     return ['invalid']
 
-  [dummy, ip, day, monthName, year, hour, min, sec, method, url, code, referrer, ua] = match
+  [dummy, ip, day, monthName, year, hour, min, sec, method, url, code, ua] = match
 
   try
     url = decodeURIComponent(url)
