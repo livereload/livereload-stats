@@ -19,6 +19,7 @@ class DataFileGroup
   fileNameToId: (name) -> name.replace(@regexp, '')
 
   allFiles: ->
+    @mkdir()
     for fileName in fs.readdirSync(@path) when fileName.match(@regexp)
       new DataFile(this, Path.join(@path, fileName), @fileNameToId(fileName))
 
