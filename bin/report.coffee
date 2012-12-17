@@ -127,6 +127,7 @@ groups = groupSegments segments, [
   { title: "", keys: ["g:all"] }
   { title: "By engagement", keys: ["g:engagement:"] }
   { title: "By engagement history", keys: ["g:status:"] }
+  { title: "By build type", keys: ["g:v:status:", "g:active:v:status:"] }
   { title: "By age", keys: ["g:knownfor:"] }
   { title: "By OS", keys: ["g:v:platform:", "g:v:os:"] }
   { title: "By OS (active users only)", keys: ["g:active:v:platform:", "g:active:v:os:"] }

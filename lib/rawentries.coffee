@@ -60,12 +60,14 @@ guessOperatingSystem = (agent) ->
 exports.computeEvents = (entry) ->
   events = ['e:ping']
   events.push "v:version:#{entry.iversion}"  if entry.iversion
+  events.push "v:status:#{entry.status}"     if entry.status
   if (entry.platform is 'windows') and (entry.iversion.startsWith '0.')
     events.push "v:platform:windows"
     events.push "v:os:win_any"
   else if entry.agent isnt '-'
     events.push "v:platform:mac"
     events.push "v:os:" + guessOperatingSystem(entry.agent)
+
 
   eventsToData = Hierarchy()
 
