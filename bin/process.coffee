@@ -11,11 +11,11 @@ processors = fs.readdirSync(Path.join(__dirname, '../lib/processing')).filter(/\
 groups     = Object.keys(DataFileGroups)
 
 options = require('dreamopt') [
-  "Usage: node bin/process.js processor input output"
+  "Usage: node bin/process.js <processor> <input> <output>"
 
-  "  processor            A processor to run (a module under lib/processing)  #required"
-  "  input                Source file group to process                        #required"
-  "  output               Destination file group to write to                  #required"
+  "  <processor>            A processor to run (a module under lib/processing)  #required"
+  "  <input>                Source file group to process                        #required"
+  "  <output>               Destination file group to write to                  #required"
 
   "Available processors: #{processors.join(', ')}."
   "Available groups: #{groups.join(', ')}."
