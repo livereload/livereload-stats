@@ -26,7 +26,7 @@ analyzeUser = (period, eventsToData) ->
   else
     engagement = 'active'
 
-  valueCutoff = period.endUnixTime() - VALUE_VALIDITY_PERIOD * DAY
+  valueCutoff = period.startUnixTime() - VALUE_VALIDITY_PERIOD * DAY
 
   values = (event for own event, eventData of eventsToData when event.startsWith('v:') and eventData.last >= valueCutoff)
 
