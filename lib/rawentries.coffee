@@ -41,7 +41,20 @@ guessOperatingSystem = (agent) ->
     when agent.match(/Darwin\/12\./) then 'mac_10_8'
     when agent.match(/Darwin\/11\./) then 'mac_10_7'
     when agent.match(/Darwin\/10\./) then 'mac_10_6'
-    else logUnknownAgent(agent);          'unknown'
+    when agent.match(/Windows NT 6\.2/) then 'win_8'
+    when agent.match(/Windows NT 6\.1/) then 'win_7'
+    when agent.match(/Windows NT 6\.0/) then 'win_vista'
+    when agent.match(/Windows NT 5\.2/) then 'win_xp'
+    when agent.match(/Windows NT 5\.1/) then 'win_xp'
+    when agent.match(/Windows NT 5\.0/) then 'win_2000'
+    when agent.match(/Windows XP/) then 'win_xp'
+    when agent.match(/Win 9x 4\.9/) then 'win_me'
+    when agent.match(/Windows 98/) then 'win_98'
+    else
+      logUnknownAgent(agent)
+      if agent.match(/Windows/)    then 'win_unknown'
+      else if agent.match(/Mac OS X/) then 'mac_unknown'
+      else                              'unknown'
 
 
 exports.computeEvents = (entry) ->
