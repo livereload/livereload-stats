@@ -70,6 +70,9 @@ exports.computeEvents = (entry) ->
     events.push "v:platform:mac"
     events.push "v:os:" + guessOperatingSystem(entry.agent)
 
+  if entry.exts
+    for ext in entry.exts.trim().split(',')
+      events.push "v:ext:#{ext}"
 
   eventsToData = Hierarchy()
 

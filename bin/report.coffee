@@ -57,6 +57,7 @@ hashToArray = (hash, levels) ->
 temporalTransform = (lastN, periodsToData, levels) ->
   keys = (Object.keys(data) for own period, data of periodsToData).flatten().union().sort()
   periods = (period for own period, data of periodsToData).sort().last(lastN)
+  lastPeriod = periods[periods.length - 1]
 
   result =
     cols:
@@ -74,6 +75,7 @@ temporalTransform = (lastN, periodsToData, levels) ->
                 # title: period
                 value: periodsToData[period][key] || ''
               }
+          value: periodsToData[lastPeriod][key] || {}
         }
 
 
@@ -100,6 +102,8 @@ groupSegments = (sourceSegments, sourceGroups) ->
 
     groupRows = []
 
+    for keyPrefix in group.hideKeys or []
+      ungroupedSegments.rows = (row for row in ungroupedSegments.rows when !row.key.startsWith(keyPrefix))
     for keyPrefix in group.keys
       otherRows = []
       for row in ungroupedSegments.rows
@@ -108,6 +112,11 @@ groupSegments = (sourceSegments, sourceGroups) ->
         else
           otherRows.push(row)
       ungroupedSegments.rows = otherRows
+
+    if group.sort
+      groupRows = groupRows.sortBy((row) -> -row.value.count)
+    if group.min
+      groupRows = groupRows.filter((row) -> row.value.count >= group.min)
 
     group.segments = { cols: ungroupedSegments.cols, rows: groupRows }
 
@@ -133,6 +142,7 @@ groups = groupSegments segments, [
   { title: "By OS (active users only)", keys: ["g:active:v:platform:", "g:active:v:os:"] }
   { title: "By version", keys: ["g:v:version:"] }
   { title: "By version (active users only)", keys: ["g:active:v:version:"] }
+  { title: "By additional monitoring extensions", keys: ["g:v:ext:"], hideKeys: ["g:active:v:ext:"], sort: yes, min: 2 }
   { title: "Other segments"}
 ]
 
