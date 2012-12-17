@@ -32,7 +32,9 @@ class Granularity
       @[method + @name] = (period) -> period
 
   compare: (a, b) ->
-    a.compare(b)
+    if a < b then -1
+    else if a > b then 1
+    else 0
 
   lt: (a, b) -> @compare(a, b) <  0
   le: (a, b) -> @compare(a, b) <= 0
