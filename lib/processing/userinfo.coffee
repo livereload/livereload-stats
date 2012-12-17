@@ -11,6 +11,7 @@ DAY = (1).day() / 1000
 
 analyzeUser = (period, eventsToData) ->
   pingEventData = eventsToData['e:ping']
+  return null if !pingEventData
 
   firstPingTime      = pingEventData.first
   lastPingTime       = pingEventData.last
@@ -36,6 +37,7 @@ module.exports = (period, usersToEventsToData) ->
   usersToData = Hierarchy()
   require('util').debug "usersToEventsToData keys: #{Object.keys(usersToEventsToData).length}"
   for own userId, eventsToData of usersToEventsToData
-    usersToData.add userId, analyzeUser(period, eventsToData)
+    if userData = analyzeUser(period, eventsToData)
+      usersToData.add userId, userData
   require('util').debug "output keys: #{Object.keys(usersToData).length}"
   return usersToData
