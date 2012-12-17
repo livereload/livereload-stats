@@ -1,9 +1,12 @@
 Hierarchy   = require '../hierarchy'
 {EventType} = require '../eventtypes'
+pad         = require 'pad'
+
+pad2 = (n) -> pad(2, n, '0')
 
 
 computeSegments = (userData) ->
-  segmentNames = ["g:all", "g:status:#{userData.status}", "g:engagement:#{userData.engagement}", "g:knownfor:#{userData.knownfor}"]
+  segmentNames = ["g:all", "g:status:#{userData.status}", "g:engagement:#{userData.engagement}", "g:knownfor:#{pad2 userData.knownfor}"]
 
   segmentNames = segmentNames.concat('g:' + event for event in userData.values)
 
