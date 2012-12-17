@@ -89,8 +89,8 @@ class Period
 
   toString: -> @string
 
-  startTime: -> @_startTime ||= Date.create(@firstday()).setUTC().beginningOfDay()
-  endTime:   -> @_endTime   ||= capToNow(Date.create(@lastday()) .setUTC().endOfDay())
+  startTime: -> @_startTime ||= Date.create(@firstday()).utc(on).beginningOfDay()
+  endTime:   -> @_endTime   ||= capToNow(Date.create(@lastday()).utc(on).endOfDay())
 
   startUnixTime: -> @_startUnixTime ||= Math.round(@startTime().getTime() / 1000)
   endUnixTime:   -> @_endUnixTime   ||= Math.round(@endTime()  .getTime() / 1000)
