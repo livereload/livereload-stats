@@ -1,14 +1,16 @@
 
-h2 Segments
+for group in groups
+  if group.title
+    h2= group.title
 
-table.segments
-  tr
-    th Segment
-    for col in segments.cols
-      th= col.title
-  
-  for row in segments.rows
+  table.segments
     tr
-      td= row.key
-      for col in row.cols
-        td= col.value.count
+      th.segment &nbsp;
+      for col in group.segments.cols
+        th= col.title
+
+    for row in group.segments.rows
+      tr
+        td.segment= row.key
+        for col in row.cols
+          td= col.value.count

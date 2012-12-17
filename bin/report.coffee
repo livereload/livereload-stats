@@ -89,10 +89,51 @@ loadData = (groupName, func) ->
     func(periodsToData, group.levels)
 
 
+groupSegments = (sourceSegments, sourceGroups) ->
+  ungroupedSegments = Object.clone(sourceSegments)
+
+  groups = (Object.clone(group) for group in sourceGroups)
+  otherGroup = groups.pop()
+
+  for group in groups
+    group.regexp = new RegExp(("^" + RegExp.escape(key) for key in group.keys).join("|"))
+
+    groupRows = []
+
+    for keyPrefix in group.keys
+      otherRows = []
+      for row in ungroupedSegments.rows
+        if row.key.startsWith(keyPrefix)
+          groupRows.push(row)
+        else
+          otherRows.push(row)
+      ungroupedSegments.rows = otherRows
+
+    group.segments = { cols: ungroupedSegments.cols, rows: groupRows }
+
+  if ungroupedSegments.rows.length > 0
+    otherGroup.segments = ungroupedSegments
+    groups.push(otherGroup)
+
+  return groups
+
+
 views = loadViews(Path.join(__dirname, '../views'))
 
 
 segments = loadData('month-segments', temporalTransform.fill(10))
+
+groups = groupSegments segments, [
+  { title: "", keys: ["g:all"] }
+  { title: "By engagement", keys: ["g:engagement:"] }
+  { title: "By engagement history", keys: ["g:status:"] }
+  { title: "By age", keys: ["g:knownfor:"] }
+  { title: "By OS", keys: ["g:v:platform:", "g:v:os:"] }
+  { title: "By OS (active users only)", keys: ["g:active:v:platform:", "g:active:v:os:"] }
+  { title: "By version", keys: ["g:v:version:"] }
+  { title: "By version (active users only)", keys: ["g:active:v:version:"] }
+  { title: "Other segments"}
+]
 
 
 html = views.layout {
@@ -100,7 +141,7 @@ html = views.layout {
   breadcrumbs: [
     { title: "LiveReload Statistics", active: yes }
   ]
-  content: views.index({ segments })
+  content: views.index({ groups })
 }
 
 DataFileGroups.html.mkdir()
