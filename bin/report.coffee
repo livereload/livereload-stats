@@ -65,7 +65,7 @@ temporalTransform = (lastN, periodsToData, levels) ->
           title: period
         }
     rows:
-      for key in keys
+      for key in keys when periods.any((pediod) -> periodsToData[period][key])
         {
           key: key
           cols:
