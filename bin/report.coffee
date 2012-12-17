@@ -92,7 +92,7 @@ loadData = (groupName, func) ->
 views = loadViews(Path.join(__dirname, '../views'))
 
 
-segments = loadData('month-segments', temporalTransform.fill(5))
+segments = loadData('month-segments', temporalTransform.fill(10))
 
 
 html = views.layout {
