@@ -2,7 +2,13 @@
 Hierarchy        = require '../lib/hierarchy'
 
 
-exports.guessUserId = (entry) -> 'u:' + entry.ip
+exports.guessUserId = (entry) ->
+  random    = entry.random
+  firstTime = entry.stats?.stat_launch_first
+  if random? and firstTime
+    "u:#{firstTime}_#{random}"
+  else
+    'u:' + entry.ip
 
 
 LOGGED_UNKNOWN_AGENTS = null
