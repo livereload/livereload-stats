@@ -1,13 +1,20 @@
 #! /bin/bash
 
 yearly=false
+source=apache
 if test "$1" = "-y"; then
   yearly=true
   echo "Will run yearly statistics."
   shift
 fi
+if test "$1" = "--s3"; then
+  source=s3
+  shift
+fi
 
-node bin/process.js apache-to-raw apache raw "$@"
+echo "Source: $source."
+
+node bin/process.js ${source}-to-raw $source raw "$@"
 
 node bin/process.js rawtodaily raw day-events "$@"
 node bin/process.js reduce day-events month-events "$@"

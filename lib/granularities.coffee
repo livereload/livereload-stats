@@ -3,6 +3,7 @@ DAY_FORMAT   = '{yyyy}-{MM}-{dd}'
 MONTH_FORMAT = '{yyyy}-{MM}'
 YEAR_FORMAT  = '{yyyy}'
 
+SUBDAY_REGEXP = /^(((\d{4})-\d{2})-\d{2})-.*$/
 DAY_REGEXP   = /^((\d{4})-\d{2})-\d{2}$/
 MONTH_REGEXP = /^(\d{4})-\d{2}$/
 
@@ -56,6 +57,12 @@ class Granularity
 
 
 module.exports = G =
+  subday:
+    Object.merge new Granularity('subday'),
+      outerday:   (period) -> period.replace(SUBDAY_REGEXP, '$1')
+      outermonth: (period) -> period.replace(SUBDAY_REGEXP, '$2')
+      outeryear:  (period) -> period.replace(SUBDAY_REGEXP, '$3')
+
   day:
     Object.merge new Granularity('day'),
       outermonth: (period) -> period.replace(DAY_REGEXP, '$1')

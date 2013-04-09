@@ -70,6 +70,7 @@ exports.computeEvents = (entry) ->
   if (entry.platform is 'windows') and (entry.iversion.startsWith '0.')
     events.push "v:platform:windows"
     events.push "v:os:win_any"
+    events.push "v:os:" + guessOperatingSystem(entry.agent)
   else if entry.platform is 'windows'
     return Hierarchy()  # ignore; this is a dummy ping sent by the Mac backend, the native side sends better ones
   else if entry.agent isnt '-'

@@ -48,6 +48,19 @@ class ApacheDataFileGroup extends DataFileGroup
   parse: (data) -> data.split("\n")
 
 
+class S3DataFileGroup extends DataFileGroup
+
+  constructor: (subdir) ->
+    super(subdir, 'subday', 0, '')
+    @regexp = /^access_log-/
+
+  idToFileName: (id)   -> throw new Error "Unsupported"
+
+  fileNameToId: (name) -> name.replace(/^access_log-/, '').replace(/^(\d\d\d\d)-(\d\d)-(\d\d)-(.*)$/, (_, y, m, d, q) -> "#{y}-#{m}-#{d}-#{q}")
+
+  parse: (data) -> data.split("\n")
+
+
 
 class DataFile
   constructor: (@group, @path, @id) ->
@@ -76,6 +89,7 @@ class DataFile
 
 exports.DataFileGroups = DataFileGroups =
   apache:  new ApacheDataFileGroup('apache')
+  s3:      new S3DataFileGroup('s3')
   raw:     new DataFileGroup('raw',     'day',    0,  '')
   rawxx:   new DataFileGroup('rawxx',   'day',    0,  '')
   html:    new DataFileGroup('html',    'none',   0,  '')
