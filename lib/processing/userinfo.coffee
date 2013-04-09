@@ -30,6 +30,10 @@ analyzeUser = (period, eventsToData) ->
 
   values = (event for own event, eventData of eventsToData when event.startsWith('v:') and eventData.last >= valueCutoff)
 
+  stats = {}
+  for own event, eventData of eventsToData when event.startsWith('s:')
+    stats[event] = eventData
+
   return { firstPingTime, lastPingTime, activityDuration, inactivityDuration, age, engagement, values }
 
 

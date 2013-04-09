@@ -94,6 +94,6 @@ exports.computeEvents = (entry) ->
       last  = stats[key + '_last']
 
       if count? and first? and last?
-        eventsToData['s:' + key] = EventType.aggregate.map({ first, last, count })
+        eventsToData['s:' + key.replace(/^stat_/, '')] = EventType.aggregate.map({ first, last, count })
 
   return eventsToData
